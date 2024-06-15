@@ -1,13 +1,23 @@
 import React from 'react'
 import {Row,Col} from 'react-bootstrap'
-import products from '../products'
+import { useEffect ,useState } from 'react'
 import Product from '../components/product'
-
-
-
-
+import axios from 'axios'
 
 const Homescreen = () => {
+
+    const [products, setProducts] = useState([]);
+    useEffect(()=>{
+        const fetchProducts = async () => {
+            const { data } = await axios.get('/api/products');
+            setProducts(data);
+          };
+          fetchProducts()
+
+    },[]) // [] is dependency array empty means it will run for only once...
+
+
+
   return (
    <>
    <h1>Latest Products</h1>
