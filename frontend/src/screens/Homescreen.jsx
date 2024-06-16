@@ -4,17 +4,17 @@ import { useEffect ,useState } from 'react'
 import Product from '../components/product'
 import axios from 'axios'
 
-const Homescreen = () => {
-
+const HomeScreen = () => {
     const [products, setProducts] = useState([]);
-    useEffect(()=>{
-        const fetchProducts = async () => {
-            const { data } = await axios.get('/api/products');
-            setProducts(data);
-          };
-          fetchProducts()
-
-    },[]) // [] is dependency array empty means it will run for only once...
+  
+    useEffect(() => {
+      const fetchProducts = async () => {
+        const { data } = await axios.get('/api/products');
+        setProducts(data);
+      };
+  
+      fetchProducts();
+    }, []);// [] is dependency array empty means it will run for only once...
 
 
 
@@ -35,4 +35,4 @@ const Homescreen = () => {
   )
 }
 
-export default Homescreen
+export default HomeScreen

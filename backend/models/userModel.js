@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     isAdmin:{
         type:Boolean,
         required:true,
-        default:false,  // thus to make any user admin, we have to go to databse and change this value...
+        default:false,  // thus to make any user admin, we have to go to database and change this value...
     },
 
 },{
