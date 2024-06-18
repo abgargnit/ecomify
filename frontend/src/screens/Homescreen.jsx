@@ -1,37 +1,33 @@
-import React from 'react'
-import {Row,Col} from 'react-bootstrap'
-import { useEffect ,useState } from 'react'
-import Product from '../components/product'
-import axios from 'axios'
+import { Row, Col } from 'react-bootstrap';
+import Loader from '../components/loader.jsx';
+import Message from '../components/message.jsx';
+import { useGetProductsQuery } from '../slices/productsApislice.js';
+import Product from '../components/product';
+
+
 
 const HomeScreen = () => {
-    const [products, setProducts] = useState([]);
-  
-    useEffect(() => {
-      const fetchProducts = async () => {
-        const { data } = await axios.get('/api/products');
-        setProducts(data);
-      };
-  
-      fetchProducts();
-    }, []);// [] is dependency array empty means it will run for only once...
-
-
+  const { data: products, isLoading, error } = useGetProductsQuery();
 
   return (
-   <>
-   <h1>Latest Products</h1>
-   <Row>
-    {
-        products.map((products)=>(
-            <Col key={products._id} sm={12} md={6} lg={4} xl={3}>
-                {/* <h3>{products.name}</h3> */}
-                <Product product={products}></Product>
-            </Col>
-        ))
-    }
-   </Row>
-   </>
+  <>
+  {isLoading ? (
+        <Loader/>
+      ) : error ? (
+        <Message variant='danger'>{error?.data?.message || error.error}</Message>
+      ) : (
+        <>
+          <h1>Latest Products</h1>
+          <Row>
+            {products.map((product) => (
+              <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+                <Product product={product} />
+              </Col>
+            ))}
+          </Row>
+        </>
+      )}
+  </>
   )
 }
 
