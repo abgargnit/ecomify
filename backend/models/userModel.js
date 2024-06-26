@@ -33,3 +33,8 @@ userSchema.methods.matchPassword = async function(enteredPassword){
 const User = mongoose.model("User", userSchema);
 
 export default User;
+
+
+// jwt is used for authentication
+// json web tokens
+// header payload and signature..
