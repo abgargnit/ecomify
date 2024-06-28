@@ -3,6 +3,7 @@ import productRoutes from './routes/productsRoutes.js';
 import userRoutes from './routes/userRoutes.js'
 import ConnectDB from './config/db.js';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 import { notFound,errorHandler } from './middlewares/errorMiddleware.js';
 
 
@@ -18,6 +19,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true }));
 
+// cookie parser middleware 
+app.use(cookieParser());
 
 app.get('/',(req,res)=>{
     res.send("API is running...") // creating routes
