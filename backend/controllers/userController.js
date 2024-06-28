@@ -1,8 +1,10 @@
 import asyncHandler from '../middlewares/asyncHandler.js';
 import User from '../models/userModel.js';
-import jwt from 'jsonwebtoken';
+import generateToken from '../utils/generateToken.js';
 import dotenv from 'dotenv';
 dotenv.config();
+
+
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -12,21 +14,8 @@ const authUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({email});
 
     if(user && (await user.matchPassword(password))){
-        // Now we will create token
-        const token = jwt.sign({userId : user._id }, process.env.SECRET_KEY, 
-            {
-                expiresIn: '30d', 
-            }
-        );
-         // set jwt as Http-only cookie
-        res.cookie('jwt', token, {
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV !== 'development',
-                    sameSite: 'strict', //  to prevent attacks
-                    maxAge: 30*24*60*60*1000 // this will be 30 days...
-                })
-
-        res.json({
+        generateToken(res,user._id);
+        res.status(200).json({
             id: user._id,
             name: user.name,
             email: user.email,
@@ -43,21 +32,82 @@ const authUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  res.send('register user');
+    const {name, email, password} = req.body;
+    const UserExists = await User.findOne({email});
+    if(UserExists){
+      res.status(400); // client error 
+      throw new Error('User already exists!');
+    }
+
+    const user = await User.create({
+      name,
+      email,
+      password,
+    });
+    // now check for the user
+    if(user){
+      generateToken(res,user._id);
+      res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        // password: user.password , we dont want to show the password
+        isAdmin: user.isAdmin,
+      })
+    }else{
+      res.status(400);
+      throw new Error('Invalid user data');
+    }
+
+
 });
 
 // @desc    Get user profile
 // @route   GET /api/users/profile
 // @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
-  res.send('get user profile');
+  const user = await User.findById(req.user._id);
+  if(user){
+    res.status(200).json({
+      _id:user._id,
+      name:user.name,
+      email:user.email,
+      isAdmin:user.isAdmin,
+    });
+  }else{
+    res.status(404);
+    throw new Error('User not found!');
+  }
 });
 
 // @desc    Update user profile
 // @route   PUT /api/users/profile
 // @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-  res.send('update user profile');
+  const user = await User.findById(req.user._id);
+  if(user){
+    user.name = req.body.name || user.name ;
+    user.email = req.body.email || user.email;
+
+    // we want to mess with the password only if it has to be changed as it is hashed
+
+    if(req.body.password){
+      user.password = req.body.password;
+    }
+
+    const updateuser = await user.save();
+
+    res.status(200).json({
+      _id: updateuser._id,
+      name: updateuser.name,
+      email:updateuser.email,
+      isAdmin: updateuser.isAdmin,
+    })
+  }
+  else{
+    res.status(404);
+    throw new Error('User not found!');
+  }
 });
 
 // @desc    Logout User and delete it from browser cookie
@@ -72,6 +122,8 @@ const logoutUser = asyncHandler(async (req, res) => {
 
       res.status(200).json({message: 'Logged out successfully!'});
   });
+
+
 
 // @desc    Get all users
 // @route   GET /api/users
