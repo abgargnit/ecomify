@@ -13,6 +13,7 @@ import './assets/styles/bootstrap.custom.css'
 import './assets/styles/index.css'
 import './index.css';
 import App from './App';
+import PrivateRoute from './components/privateRoute.jsx';
 import Homescreen from './screens/Homescreen';
 import reportWebVitals from './reportWebVitals';
 import ProductScreen from './screens/ProductScreen';
@@ -30,8 +31,9 @@ const router = createBrowserRouter(
       <Route path='/cart' element={<CartScreen />} />
       <Route path='/login' element={<LoginScreen />} />
       <Route path='/register' element={<RegisterScreen />} />
+      <Route path='' element={<PrivateRoute />}>
       <Route path='/shipping' element={<ShippingScreen />} />
-
+      </Route>
     </Route>
   )
 );
