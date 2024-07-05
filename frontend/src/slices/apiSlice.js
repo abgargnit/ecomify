@@ -7,6 +7,10 @@ export const apiSLice = createApi({
     baseQuery: baseQuery,
     tagTypes: ['Product', 'Order', 'User'],
     endpoints : (builder) => ({})
-})
+});
+
+
+
+
 
 
