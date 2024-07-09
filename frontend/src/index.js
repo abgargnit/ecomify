@@ -15,6 +15,7 @@ import './assets/styles/index.css'
 import './index.css';
 import App from './App';
 import PrivateRoute from './components/privateRoute.jsx';
+import AdminRoute from './components/adminRoute.jsx';
 import Homescreen from './screens/Homescreen';
 import reportWebVitals from './reportWebVitals';
 import ProductScreen from './screens/ProductScreen';
@@ -26,6 +27,7 @@ import PaymentScreen from './screens/PaymentScreen.jsx';
 import PlaceOrderScreen from './screens/PlaceOrderScreen.jsx';
 import { OrderScreen } from './screens/OrderScreen.jsx';
 import ProfileScreen from './screens/ProfileScreen.jsx';
+import OrderListScreen from './screens/admin/OrderListScreen.jsx';
 
 
 const router = createBrowserRouter(
@@ -42,8 +44,11 @@ const router = createBrowserRouter(
       <Route path='/placeorder' element={<PlaceOrderScreen />} />
       <Route path='/order/:id' element={<OrderScreen />} />
       <Route path='/profile' element={<ProfileScreen />} />
+    
+      </Route>
+      <Route path='' element={<AdminRoute />}>
+      <Route path='/admin/orderlist' element={<OrderListScreen />} />
 
-      
       </Route>
       
     </Route>

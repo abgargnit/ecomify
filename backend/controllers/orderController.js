@@ -95,10 +95,11 @@ const updateOrderstobedeleivered = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get all orders
-// @route   POST /api/orders
+// @route   GET /api/orders
 // @access  Private/admin
 const getOrders = asyncHandler(async (req, res) => {
-    res.send('Get all orders');
+        const orders = await Order.find({}).populate('user','id name');
+        res.status(200).json(orders);
 });
 
 export {

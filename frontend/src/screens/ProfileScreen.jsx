@@ -48,8 +48,6 @@ const ProfileScreen = () => {
         }
     }
     
-
-
   return (
     <Row>
         <Col md={3}>
