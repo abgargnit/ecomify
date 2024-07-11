@@ -97,7 +97,7 @@ const PlaceOrderScreen = () => {
         <Card>
           <ListGroup variant="flush">
             <ListGroup.Item>
-              Oreder Summary
+              Order Summary
             </ListGroup.Item>
             <ListGroup.Item>
               <Row>
