@@ -44,7 +44,31 @@ const createProduct = asyncHandler(async (req, res) => {
 
 });
 
-export { getProducts, getProductById, createProduct };
+// @desc    Update a product
+// @route   PUT /api/products/:id
+// @access  Private/admin
+const updateProduct = asyncHandler(async (req, res) => {
+      const {name,price,image,brand,category,description,countInStock} = req.body;
+      const product = await Product.findById(req.params.id);
+      if(product){
+        product.name = name;
+        product.price = price;
+        product.image = image;
+        product.brand = brand;
+        product.category = category;
+        product.description = description;
+        product.countInStock = countInStock;
+
+        const updatedProduct = await product.save();
+        res.json(updatedProduct);
+      }
+      else{
+        res.status(404);
+        throw new Error('Resource not found!');
+      }
+});
+
+export { getProducts, getProductById, createProduct, updateProduct };
 
 
 
