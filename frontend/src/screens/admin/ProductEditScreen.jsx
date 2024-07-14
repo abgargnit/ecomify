@@ -1,12 +1,12 @@
 import { useState,useEffect } from "react"
 import { useNavigate,useParams,Link} from "react-router-dom"
-import {Form,Button, FormLabel} from 'react-bootstrap'
+import {Form,Button, FormLabel, FormControl} from 'react-bootstrap'
 import {useDispatch,useSelector}from 'react-redux'
 import Message from '../../components/message'
 import Loader from '../../components/loader'
 import FormContainer from '../../components/formContainer'
 import { toast } from 'react-toastify'
-import {useUpdateProductMutation,useGetProductDetailsQuery} from '../../slices/productsApislice'
+import {useUpdateProductMutation,useGetProductDetailsQuery,useUploadProductImageMutation} from '../../slices/productsApislice'
  
 
 const ProductEditScreen = () => {
@@ -21,6 +21,7 @@ const ProductEditScreen = () => {
 
     const {data:product,isLoading,refetch,error} = useGetProductDetailsQuery(productId);
     const [updateProduct,{isLoading:loadingUpdate}] = useUpdateProductMutation();
+    const [uploadProductImage,{isLoading:loadingUpload}] = useUploadProductImageMutation();
 
     const navigate = useNavigate();
 
@@ -58,6 +59,18 @@ const ProductEditScreen = () => {
             navigate('/admin/productlist')
         }
     }
+
+    const uploadFilehandler = async (e) => {
+        const formData = new FormData()
+        formData.append('image',e.target.files[0]);
+        try {
+            const res = await uploadProductImage(formData).unwrap();
+            toast.success(res.message);
+            setImage(res.image);
+        } catch (err) {
+            toast.error(err?.data?.message || err.message);
+        }
+    }
     
 
 
@@ -89,6 +102,15 @@ const ProductEditScreen = () => {
                     </Form.Control>
                 </Form.Group>
                 {/* {Input Image Placeholder} */}
+                <Form.Group controlId="image" className="my-2">
+                    <Form.Label>Image</Form.Label>
+                    <Form.Control
+                    type="text"
+                    placeholder="Enter image url"
+                    value={image}
+                    onChange={(e)=>setImage}>
+                    </Form.Control>
+                </Form.Group>
                 <Form.Group controlId="brand" className="my-2">
                     <FormLabel>Brand</FormLabel>
                     <Form.Control
@@ -96,6 +118,8 @@ const ProductEditScreen = () => {
                     placeholder="Enter Brand"
                     value={brand}
                     onChange={(e)=>setBrand(e.target.value)}>
+                    </Form.Control>
+                    <Form.Control type="file" label='Choose file' onChange={uploadFilehandler}>
                     </Form.Control>
                 </Form.Group>
                 <Form.Group controlId="countInStock" className="my-2">
