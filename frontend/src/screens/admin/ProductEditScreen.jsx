@@ -1,7 +1,6 @@
 import { useState,useEffect } from "react"
 import { useNavigate,useParams,Link} from "react-router-dom"
-import {Form,Button, FormLabel, FormControl} from 'react-bootstrap'
-import {useDispatch,useSelector}from 'react-redux'
+import {Form,Button, FormLabel} from 'react-bootstrap'
 import Message from '../../components/message'
 import Loader from '../../components/loader'
 import FormContainer from '../../components/formContainer'
@@ -19,7 +18,7 @@ const ProductEditScreen = () => {
     const [countInStock,setCountInStock] = useState(0);
     const [description,setDesription] = useState('');
 
-    const {data:product,isLoading,refetch,error} = useGetProductDetailsQuery(productId);
+    const {data:product,isLoading,error} = useGetProductDetailsQuery(productId);
     const [updateProduct,{isLoading:loadingUpdate}] = useUpdateProductMutation();
     const [uploadProductImage,{isLoading:loadingUpload}] = useUploadProductImageMutation();
 
@@ -122,6 +121,7 @@ const ProductEditScreen = () => {
                     <Form.Control type="file" label='Choose file' onChange={uploadFilehandler}>
                     </Form.Control>
                 </Form.Group>
+                {loadingUpload && <Loader/>}
                 <Form.Group controlId="countInStock" className="my-2">
                     <FormLabel>Count In Stock</FormLabel>
                     <Form.Control

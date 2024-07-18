@@ -17,6 +17,7 @@ import Rating from '../components/rating';
 import Loader from '../components/loader';
 import Message from '../components/message';
 import { addToCart } from '../slices/cartSlice';
+import Meta from '../components/Meta';
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
@@ -65,6 +66,7 @@ const ProductScreen = () => {
 
   return (
     <>
+
       <Link className='btn btn-light my-3' to='/'>
         Go Back
       </Link>
@@ -76,6 +78,7 @@ const ProductScreen = () => {
         </Message>
       ) : (
         <>
+        <Meta title={product.name}/>
           <Row>
             <Col md={6}>
               <Image src={product.image} alt={product.name} fluid />
